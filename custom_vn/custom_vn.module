@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Vocabulary notice.
+ */
+
+
+function custom_vn_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'taxonomy_form_vocabulary' && !empty($form['#vocabulary']->vid)) {
+    $notice = variable_get('custom_vocabulary_notice_' . $form['#vocabulary']->vid, array());
+    $form['custom_vocabulary_notice'] = array(
+      '#type' => 'text_format',
+      '#format' => is_array($notice) && !empty($notice['format']) ? $notice['format'] : 'full_html',
+      '#title' => t('Vocabulary notice'),
+      '#default_value' => is_array($notice) && isset($notice['value']) ? $notice['value'] : '',
+    );
+    $form['#submit'][] = '_custom_vn_taxonomy_form_vocabulary_submit';
+  }
+}
+
+function _custom_vn_taxonomy_form_vocabulary_submit($form, &$form_state) {
+  if (isset($form_state['values']['vid']) && isset($form_state['values']['custom_vocabulary_notice'])) {
+    variable_set('custom_vocabulary_notice_' . $form_state['values']['vid'], $form_state['values']['custom_vocabulary_notice']);
+  }
+}

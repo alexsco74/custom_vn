@@ -1,0 +1,5 @@
+name = Custom vocabulary notice
+description = Vocabulary notice
+package = Other
+version = VERSION
+core = 7.x
